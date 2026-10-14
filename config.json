@@ -1,0 +1,50 @@
+{
+  "api_keys": {
+    "gemini": "AQ.Ab8RN6LUNuQ6NmO4_9jeVFhMNRs1Leg0AwVH4DvyMKI2TDAU9w",
+    "elevenlabs": "",
+    "minimax": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJHcm91cE5hbWUiOiJkZXZlbG9wZXIgc2FuaWFraXJhbiIsIlVzZXJOYW1lIjoiZGV2ZWxvcGVyIHNhbmlha2lyYW4iLCJBY2NvdW50IjoiIiwiU3ViamVjdElEIjoiMTk2NTIxNjYyMjczODE1NDIzNiIsIlBob25lIjoiIiwiR3JvdXBJRCI6IjE5NjUyMTY2MjI3Mjk3NjE1MzIiLCJQYWdlTmFtZSI6IiIsIk1haWwiOiJkZXZlbG9wZXJzYW5pYWtpcmFuQGdtYWlsLmNvbSIsIkNyZWF0ZVRpbWUiOiIyMDI1LTA5LTA5IDE0OjIzOjM2IiwiVG9rZW5UeXBlIjoyLCJpc3MiOiJtaW5pbWF4In0.sF6jJiaKIiO0hlmg07Kril_QR_823eFZq0RhuUGMJOoWuRwtTFcWWrDiSI64ZwWWOm_MUvBwH3qXwsTEWqZYhhKH6RPUaLbihIRXpjY5uQMQURCmJ5EqdNtxdQlKfice_NkBMxgTENEfwDHrmQY2eTljl3vj1B-Dau7uIUtPe9JISgfI6-sp4GYd1HbsZP3Z1TeOdOFpQJdi9Zmm6-sgRxt62yCjoSSUHGizAlYnc2xI2P0urpfzOyJmxSu_3wqV8kAkmeb8A86s7j05uXnh7H70jeN2UEq-r7yNQ5-znLG7HTAsejKxbL-XLN9ZKYj4Yr127pCdh-GFOUVg1ce3Mw",
+    "openai": "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",
+    "openrouter": ""
+  },
+  "profiles": {
+    "acc1": {
+      "id": "acc1",
+      "name": "acc1 (Primary)",
+      "status": "Active",
+      "email": "creator1@studio.ai",
+      "cookies": 42,
+      "last_active": "Just now",
+      "data_dir": "C:/Users/SSC/Desktop/Stickman/data/chrome_profiles/acc1",
+      "notes": "Primary Google Chrome Canvas automation profile"
+    },
+    "acc2": {
+      "id": "acc2",
+      "name": "acc2 (Secondary)",
+      "status": "Active",
+      "email": "creator2@studio.ai",
+      "cookies": 38,
+      "last_active": "Just now",
+      "data_dir": "C:/Users/SSC/Desktop/Stickman/data/chrome_profiles/acc2",
+      "notes": "Secondary Google Chrome Canvas backup profile"
+    },
+    "acc3": {
+      "id": "acc3",
+      "name": "Account 3",
+      "status": "Active",
+      "email": "developersaniakiran@gmail.com",
+      "cookies": 72,
+      "last_active": "Just now",
+      "data_dir": "C:\\Users\\SSC\\Desktop\\Stickman\\data\\chrome_profiles\\acc3",
+      "notes": "Dedicated Gemini Canvas automation profile"
+    }
+  },
+  "active_profile": "acc3",
+  "active_project": "test",
+  "theme": "theme-emerald",
+  "veo_settings": {
+    "model": "veo_3_1_lite",
+    "strategy": "auto_8",
+    "motion_intensity": 7,
+    "negative_prompts": "no blur"
+  }
+}

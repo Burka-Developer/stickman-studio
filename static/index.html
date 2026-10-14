@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StickFilm AI Studio Pro v2.2.6</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f5b82e'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>">
+</head>
+<body class="theme-obsidian">
+
+  <!-- =========================================================================
+       APPLICATION HEADER BAR
+       ========================================================================= -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="brand-wrapper" id="brand-home-btn" title="StickFilm AI Studio Pro">
+        <div class="brand-icon">⚡</div>
+        <span class="brand-title">STICKFILM</span>
+        <span class="badge-unlimited">STUDIO UNLIMITED</span>
+        <span class="version-tag">v2.2.6</span>
+      </div>
+      <div class="badge-update" title="Click to view update changelog">1 Update available</div>
+
+      <!-- Project Selector -->
+      <div class="project-bar">
+        <span class="project-label">PROJECT:</span>
+        <select id="project-select" class="project-select">
+          <!-- Dynamically populated by app.js loadProjectsList() -->
+        </select>
+        <button id="btn-project-new" class="btn-header-sm" title="Create New Project">New</button>
+        <button id="btn-project-delete" class="btn-header-sm btn-danger-text" title="Delete Active Project">Delete</button>
+        <button id="btn-project-clear" class="btn-header-sm" title="Clear All Project Assets">Clear All</button>
+      </div>
+    </div>
+
+    <div class="header-center"></div>
+
+    <div class="header-right">
+      <!-- 3 Accurate Curated Modern Themes -->
+      <div class="theme-switcher-wrapper">
+        <button id="btn-theme-toggle" class="btn-header-action" title="Switch Theme (Obsidian Gold / Cyber Slate / Emerald Minimal)">
+          <span class="theme-dot" id="theme-dot-indicator"></span>
+          <span id="theme-label-text">Obsidian Gold</span>
+        </button>
+      </div>
+
+      <button id="btn-api-keys" class="btn-header-action">
+        <span class="status-dot-green"></span> API Keys
+      </button>
+      <button id="btn-restart-server" class="btn-header-action" title="Restart local FastAPI engine">
+        <span>🔄</span> Restart Server
+      </button>
+      <button id="btn-run-pipeline" class="btn-run-pipeline" title="Run 1-Click Automated Pipeline">
+        <span>▶</span> Run Pipeline
+      </button>
+      <button id="btn-stop-pipeline" class="btn-stop-pipeline" title="Stop Running Pipeline">
+        <span>⏹</span> Stop
+      </button>
+      <button id="btn-gemini-writer" class="btn-gemini-writer" title="Generate Script with AI">
+        <span>✨</span> Gemini Writer
+      </button>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       APP CONTAINER (SIDEBAR + MAIN WORKSPACE)
+       ========================================================================= -->
+  <div class="app-container">
+
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="app-sidebar">
+      <ul class="nav-list">
+        <li class="nav-item active" data-view="production" id="nav-production">
+          <span class="nav-icon">🎬</span> Production
+        </li>
+        <li class="nav-item" data-view="studio" id="nav-studio">
+          <span class="nav-icon">🖥️</span> Studio
+        </li>
+        <li class="nav-item" data-view="queue" id="nav-queue">
+          <span class="nav-icon">📑</span> Queue
+        </li>
+        <li class="nav-item" data-view="image-wall" id="nav-image-wall">
+          <span class="nav-icon">🖼️</span> Image wall
+        </li>
+        <li class="nav-item" data-view="deliverables" id="nav-deliverables">
+          <span class="nav-icon">📦</span> Deliverables
+        </li>
+        <li class="nav-item" data-view="profiles" id="nav-profiles">
+          <span class="nav-icon">🌐</span> Profiles
+        </li>
+        <li class="nav-item" data-view="veo-profiles" id="nav-veo-profiles">
+          <span class="nav-icon">⚡</span> Veo Profiles
+        </li>
+        <li class="nav-item" data-view="console" id="nav-console">
+          <span class="nav-icon">💻</span> Console
+        </li>
+      </ul>
+    </aside>
+
+    <!-- MAIN WORKSPACE -->
+    <main class="app-main">
+
+      <!-- =====================================================================
+           VIEW 1: PRODUCTION VIEW
+           ===================================================================== -->
+      <section id="view-production" class="view-panel active">
+        <div class="production-grid">
+
+          <!-- LEFT COLUMN: SCRIPT & VOICE -->
+          <div class="section-card">
+            <div class="card-header-title">
+              <span>SCRIPT & VOICE</span>
+              <span id="credit-cost-indicator" style="color:var(--gold-primary); font-size:10px;">-1,900 AI33 credits</span>
+            </div>
+
+            <div>
+              <label class="form-label" for="script-textarea">Or Paste Script Text</label>
+              <textarea id="script-textarea" class="textarea-custom" placeholder="Paste script in Hindi, English, Spanish or any language..."></textarea>
+            </div>
+
+            <!-- Real-Time Pacing Bar -->
+            <div class="pacing-bar">
+              <span id="pacing-text">⏱ Paste a script to see duration and estimated shots</span>
+              <div class="pacing-meter">
+                <div id="pacing-fill" class="pacing-fill" style="width:0%;"></div>
+              </div>
+            </div>
+
+            <!-- Duration Limiter -->
+            <div class="duration-controls">
+              <span>Make it</span>
+              <input type="number" id="input-dur-min" class="input-number-sm" value="0" min="0" max="60">
+              <span>min</span>
+              <input type="number" id="input-dur-sec" class="input-number-sm" value="0" min="0" max="59">
+              <span>sec</span>
+              <button id="btn-dur-auto" class="btn-auto-sm">Auto</button>
+            </div>
+
+            <!-- Existing Script & Project Identifier -->
+            <div class="row-dual">
+              <div>
+                <label class="form-label">Select Existing Script</label>
+                <select id="select-existing-script" class="input-select">
+                  <option value="">-- Choose an existing script file --</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label">Project Name (Identifier)</label>
+                <div style="display:flex; gap:6px;">
+                  <input type="text" id="input-project-identifier" class="input-text" placeholder="e.g. space_voyage_2099">
+                  <button id="btn-create-project-id" class="btn-gold-sm">Create Project</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Narrator Voice Model Header -->
+            <div class="card-header-title" style="margin-top: 4px;">
+              <span>Narrator Voice Model</span>
+              <div style="display:flex; gap:8px; font-size:10px;">
+                <span style="color:#10b981; font-weight:700;">AI33: 192,470 credits</span>
+                <span id="voice-count-badge" style="color:var(--text-dim);">151 voices</span>
+              </div>
+            </div>
+
+            <!-- Voice Filter Chips -->
+            <div class="voice-filter-chips">
+              <button class="chip" data-filter="all">All</button>
+              <button class="chip" data-filter="favourites">⭐ Favourites</button>
+              <button class="chip active" data-filter="free">Free</button>
+              <button class="chip" data-filter="hindi">🇮🇳 Hindi</button>
+              <button class="chip" data-filter="clones">👤 My Clones</button>
+              <button class="chip" data-filter="elevenlabs">🔵 ElevenLabs</button>
+              <button class="chip" data-filter="minimax">🎭 Minimax</button>
+              <button class="chip" data-filter="english">🇬🇧 English</button>
+            </div>
+
+            <!-- Voice Selector Dropdown -->
+            <select id="select-voice" class="input-select">
+              <option value="">Loading voices...</option>
+            </select>
+
+            <!-- Voice Action Buttons -->
+            <div class="voice-actions-row">
+              <button id="btn-voice-play-preview" class="btn-voice-tool"><span>▶</span> Play</button>
+              <button id="btn-browse-all-voices" class="btn-voice-tool"><span>🎧</span> Browse all voices ⭐</button>
+              <button id="btn-toggle-fav-voice" class="btn-voice-tool"><span>⭐</span></button>
+              <button id="btn-upload-custom-voice" class="btn-voice-tool"><span>🎤</span> Use my own voiceover</button>
+            </div>
+
+            <!-- Voice Model & Style -->
+            <div class="row-dual">
+              <div>
+                <label class="form-label">Voice model</label>
+                <select id="select-voice-model" class="input-select">
+                  <option value="eleven_v4" selected>Eleven v4 (newest, as on AI33)</option>
+                  <option value="edge_tts">Edge-TTS Local (0 Credits)</option>
+                  <option value="minimax_t2a">Minimax T2A v2</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label">Style</label>
+                <select id="select-voice-style" class="input-select">
+                  <option value="normal" selected>Normal (as on AI33)</option>
+                  <option value="dramatic">Dramatic / thriller</option>
+                  <option value="documentary">Authoritative Documentary</option>
+                  <option value="energetic">Fast Energetic Shorts</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Music -->
+            <div>
+              <label class="form-label">🎵 Music</label>
+              <select id="select-bg-music" class="input-select">
+                <option value="none" selected>No music</option>
+                <option value="ambient_calm">Cinematic Ambient Calm (Soft Piano & Pads)</option>
+                <option value="prehistoric_drums">Prehistoric Deep Percussion & Shamanic Drums</option>
+                <option value="epic_discovery">Epic Historical Discovery Orchestral</option>
+              </select>
+            </div>
+
+            <!-- Browser Profile & Voiceover Audio Box -->
+            <div class="browser-voice-card">
+              <div>
+                <label class="form-label">Starting Browser Profile</label>
+                <div style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">
+                  <select id="select-browser-profile" class="input-select">
+                    <!-- Dynamically populated by app.js syncProfileDropdowns() -->
+                  </select>
+                  <button id="btn-open-login" class="btn-voice-tool" style="justify-content:center;">🌐 Open & Login</button>
+                </div>
+              </div>
+
+              <div class="audio-player-wrapper">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span class="form-label">Voiceover Audio</span>
+                  <span class="badge-active-style" style="color:#94a3b8; border-color:rgba(148,163,184,0.4); background:rgba(148,163,184,0.15);" id="voiceover-status-badge">No Voiceover</span>
+                </div>
+                <div class="audio-player-bar">
+                  <button id="btn-audio-play-pause" class="btn-play-pill">▶</button>
+                  <span id="audio-timecode" class="audio-time-label">0:00 / 0:00</span>
+                  <input type="range" id="audio-scrub-slider" class="audio-seek-slider" min="0" max="0" value="0">
+                  <span style="font-size:12px; cursor:pointer;" id="btn-audio-mute">🔊</span>
+                </div>
+                <button id="btn-gen-voiceover-only" class="btn-voice-tool" style="justify-content:center; margin-top:2px;">Generate Voiceover Only</button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT COLUMN: LOOK & STYLE -->
+          <div class="section-card">
+            <div class="card-header-title">
+              <span>LOOK</span>
+              <span style="color:var(--text-dim); font-size:10px;">Consistent Art Direction</span>
+            </div>
+
+            <!-- Visual Art Style & Aspect Ratio -->
+            <div class="row-dual">
+              <div>
+                <div class="style-header-row">
+                  <label class="form-label">Visual Art Style</label>
+                  <button id="btn-trigger-new-cat" class="btn-header-sm" style="color:var(--gold-primary); font-weight:700;">+ New category</button>
+                  <span class="badge-active-style" id="badge-style-active">⭐ 3D Pixar Active</span>
+                </div>
+                <select id="select-art-style" class="input-select" style="margin-top:4px;">
+                  <option value="3d_pixar" selected>⭐ 3D Animated (Pixar / DreamWorks CGI Style)</option>
+                  <option value="2d_stickman">🎨 2D Stickman (Moronomy Flat Vector)</option>
+                  <option value="realistic_doc">🎬 Realistic / Cinematic Documentary</option>
+                  <option value="playful_stick">🧩 Playful Stick Figure Cartoon</option>
+                  <option value="prehistoric">🌋 Colorful Prehistoric</option>
+                  <option value="finance_vector">📊 Finance Vector Storyboard</option>
+                  <option value="vox_collage">📰 Vox Collage (Vox board)</option>
+                  <option value="retro_space">🚀 Retro Space Collage (Vox board)</option>
+                  <option value="custom_animated">🧩 Animated Cartoon Character Style (Custom)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="form-label">Video Aspect Ratio (Format)</label>
+                <select id="select-aspect-ratio" class="input-select" style="margin-top:4px;">
+                  <option value="16:9" selected>🖥️ 16:9 (Landscape / YouTube 1080p Full HD)</option>
+                  <option value="9:16">📱 9:16 (Vertical / Shorts & Reels 1080x1920)</option>
+                  <option value="1:1">⬛ 1:1 (Square / Instagram 1080x1080)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- World / People Context Input -->
+            <div>
+              <label class="form-label">🌐 World / People (optional, auto from the script)</label>
+              <input type="text" id="input-world-setting" class="input-text" placeholder="e.g. American people, present-day USA / Ancient Rome, 1st century AD" value="">
+              <label style="display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text-dim); margin-top:5px; cursor:pointer;">
+                <input type="checkbox" id="chk-use-own-style"> Use my own style
+              </label>
+            </div>
+
+            <!-- Active Style Sample Thumbnail Strip -->
+            <div class="style-preview-strip" id="style-sample-strip">
+              <!-- Dynamically populated by app.js when art style changes -->
+            </div>
+
+            <!-- Character Reference Look -->
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <label class="form-label">Character Reference Look</label>
+                <div style="display:flex; gap:6px;">
+                  <button id="btn-upload-custom-ref" class="btn-voice-tool" style="padding:2px 8px; font-size:10.5px;">+ Upload Reference</button>
+                  <input type="file" id="input-custom-ref-file" accept="image/png, image/jpeg, image/webp" style="display:none;">
+                </div>
+              </div>
+
+              <div style="display:flex; gap:8px; margin-top:6px;">
+                <select id="select-char-ref-file" class="input-select" style="flex:1;">
+                  <!-- Dynamically populated from /api/references by app.js -->
+                </select>
+                <button id="btn-clear-char-ref" class="btn-header-sm">Clear Reference</button>
+                <button id="btn-delete-char-ref" class="btn-header-sm btn-danger-text">Delete Ref File</button>
+              </div>
+
+              <div class="char-ref-box" style="margin-top:8px;">
+                <img id="img-active-char-ref" src="" class="ref-thumb-large" alt="Character Reference" style="display:none;">
+                <div id="no-char-ref-placeholder" class="ref-thumb-large" style="display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.03); color:var(--text-muted); font-size:11px; text-align:center;">No ref selected</div>
+                <div class="ref-info-col">
+                  <div style="display:flex; align-items:center; gap:6px;">
+                    <span class="badge-active-style" style="font-size:9.5px;" id="ref-badge-label">REF</span>
+                    <strong style="font-size:12px; color:#fff;" id="ref-file-name-label">None</strong>
+                  </div>
+                  <a href="#" id="link-ref-full-res" style="color:var(--cyan-accent); font-size:11px; text-decoration:none; display:none;">Full Resolution</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Reference Carousel Strip -->
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <label class="form-label">Pick a Reference (click a thumbnail)</label>
+                <span class="badge-active-style" style="background:#1a202c; color:var(--text-muted); border-color:#2d3748;" id="ref-count-badge">0 images</span>
+              </div>
+              <div class="carousel-strip" id="ref-carousel-container">
+                <!-- Dynamically populated with reference images -->
+              </div>
+            </div>
+
+            <!-- Animated Captions Preset Picker -->
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <label class="form-label">💬 Captions</label>
+                <span style="font-size:11px; color:var(--text-dim);" id="caption-preset-indicator">Word Highlight</span>
+              </div>
+              <div class="captions-grid" id="captions-presets-grid">
+                <div class="caption-card" data-preset="Off">
+                  <div class="caption-preview-box" style="color:var(--text-dim);">No captions</div>
+                  <div class="caption-name">Off</div>
+                </div>
+                <div class="caption-card" data-preset="Simple">
+                  <div class="caption-preview-box"><span class="cap-simple">the lights go out.</span></div>
+                  <div class="caption-name">Simple</div>
+                </div>
+                <div class="caption-card" data-preset="Simple Green">
+                  <div class="caption-preview-box"><span class="cap-simple-green">the lights go out</span></div>
+                  <div class="caption-name">Simple Green</div>
+                </div>
+                <div class="caption-card" data-preset="Bold Comic">
+                  <div class="caption-preview-box"><span class="cap-comic">OUT</span></div>
+                  <div class="caption-name">Bold Comic</div>
+                </div>
+                <div class="caption-card active" data-preset="Word Highlight">
+                  <div class="caption-preview-box"><span class="cap-word-highlight">THE LIGHTS <span>GO</span></span></div>
+                  <div class="caption-name">Word Highlight</div>
+                </div>
+                <div class="caption-card" data-preset="Karaoke Fill">
+                  <div class="caption-preview-box"><span class="cap-karaoke">THE LIGHTS GO OUT</span></div>
+                  <div class="caption-name">Karaoke Fill</div>
+                </div>
+                <div class="caption-card" data-preset="Boxed">
+                  <div class="caption-preview-box"><span class="cap-boxed">THE LIGHTS GO OUT</span></div>
+                  <div class="caption-name">Boxed</div>
+                </div>
+                <div class="caption-card" data-preset="One Word Pop">
+                  <div class="caption-preview-box"><span class="cap-pop">GO</span></div>
+                  <div class="caption-name">One Word Pop</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- BOTTOM CONTROL BAR (STICKY DOCK) -->
+        <div class="bottom-dock">
+          <div class="dock-left-controls">
+            <select id="select-camera-motion" class="dock-select">
+              <option value="Studio">Studio (default)</option>
+              <option value="Ken Burns">Ken Burns (slow zoom + drift)</option>
+              <option value="Slow zoom in">Slow zoom in</option>
+              <option value="Slow zoom out">Slow zoom out</option>
+              <option value="Pan left / right">Pan left / right</option>
+              <option value="Drone rise">Drone rise</option>
+              <option value="Crash zoom">Crash zoom (snap and hold)</option>
+              <option value="No motion">No motion</option>
+              <option value="Mix of all" selected>✨ Mix of all</option>
+            </select>
+
+            <select id="select-transitions" class="dock-select">
+              <option value="Mix of all" selected>✨ Mix of all</option>
+              <option value="Fade">Smooth Fade</option>
+              <option value="Dissolve">Cross Dissolve</option>
+              <option value="Cut">Hard Cut</option>
+            </select>
+
+            <select id="select-video-model" class="dock-select">
+              <option value="Off" selected>Off (picture...)</option>
+              <option value="Veo 3.1 Lite">Veo 3.1 Lite</option>
+            </select>
+
+            <select id="select-motion-speed" class="dock-select">
+              <option value="Auto" selected>Auto (motion...)</option>
+              <option value="Slow">Slow (0.5x)</option>
+              <option value="Normal">Normal (1.0x)</option>
+              <option value="Fast">Fast (1.5x)</option>
+            </select>
+          </div>
+
+          <button id="btn-launch-full-video" class="btn-launch-video">Launch Full Video</button>
+
+          <div class="dock-right-actions">
+            <button id="btn-add-to-queue" class="btn-dock-action">Add to Queue</button>
+            <button id="btn-verify-integrity" class="btn-dock-action">Verify</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           VIEW 2: STUDIO VIEW (Pipeline Monitor)
+           ===================================================================== -->
+      <section id="view-studio" class="view-panel">
+        <!-- Live Generation Monitor Card -->
+        <div class="studio-monitor-card">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="status-dot-green" style="background:#f5b82e; box-shadow:0 0 6px #f5b82e;"></span>
+              <strong style="color:#fff; font-size:12.5px;">📺 Live Gemini Canvas Generation Monitor</strong>
+            </div>
+            <span id="monitor-status-text" style="color:var(--text-muted); font-size:11.5px;">Gemini Canvas: Round 1/1 (25%)</span>
+          </div>
+
+          <!-- Real-Time Screen Capture Viewport -->
+          <div class="monitor-screen-frame">
+            <div class="monitor-browser-mockup">
+              <div class="mockup-header">
+                <span style="color:#10b981;">●</span>
+                <span style="color:#f5b82e;">●</span>
+                <span style="color:#ef4444;">●</span>
+                <span style="margin-left:8px;">Gemini Bulk Image Generator - Automation Session #acc1</span>
+              </div>
+              <div class="mockup-body">
+                <!-- Sidebar status in mock -->
+                <div style="background:#141923; border-radius:4px; padding:6px; font-size:9.5px; display:flex; flex-direction:column; gap:4px;">
+                  <span style="color:var(--gold-primary); font-weight:700;">Prompt Engine</span>
+                  <span style="color:var(--text-dim);">Aspect: 16:9</span>
+                  <span style="color:var(--text-dim);">Batch: 1 of 2</span>
+                  <span style="color:var(--text-dim);">Ref: None</span>
+                  <div style="margin-top:auto; font-size:8.5px; color:#10b981;">Session Active</div>
+                </div>
+                <!-- 3x3 Tile Grid generating -->
+                <div class="mockup-tiles" id="mockup-tiles-container">
+                  <div class="mockup-tile"><div class="tile-spinner"></div></div>
+                  <div class="mockup-tile"><div class="tile-spinner"></div></div>
+                  <div class="mockup-tile"><div class="tile-spinner"></div></div>
+                  <div class="mockup-tile"><div class="tile-spinner"></div></div>
+                  <div class="mockup-tile"><div class="tile-spinner"></div></div>
+                  <div class="mockup-tile"><div class="tile-spinner"></div></div>
+                  <div class="mockup-tile"><div class="tile-spinner"></div></div>
+                  <div class="mockup-tile"><div class="tile-spinner"></div></div>
+                  <div class="mockup-tile"><div class="tile-spinner"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="monitor-footer-bar">
+            <span>Real-time screen capture from Gemini automation</span>
+            <button id="btn-jump-to-image-wall" class="btn-voice-tool">View Generated Image Wall</button>
+          </div>
+        </div>
+
+        <!-- Automated Pipeline Stages Card -->
+        <div class="pipeline-stages-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <strong style="color:#fff; font-size:12.5px;">📊 Automated Pipeline Stages (1-Click Run)</strong>
+            <span id="pipeline-live-timer" style="font-family:var(--font-mono); font-size:12px; font-weight:700; color:var(--gold-primary);">01:04</span>
+          </div>
+
+          <!-- Step 1 -->
+          <div class="stage-row done" id="stage-row-1">
+            <div class="stage-left">
+              <span>🎙</span>
+              <span>Step 1: Voiceover Generation (Minimax / Meri Eng)</span>
+            </div>
+            <span class="stage-pill pill-done">✓ Done</span>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="stage-row done" id="stage-row-2">
+            <div class="stage-left">
+              <span>🛡</span>
+              <span>Step 2: Timestamps & Word-Level Entity Cuts</span>
+            </div>
+            <span class="stage-pill pill-done">✓ Done</span>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="stage-row done" id="stage-row-3">
+            <div class="stage-left">
+              <span>📄</span>
+              <span>Step 3: Action-First Iconic Prompt Generation</span>
+            </div>
+            <span class="stage-pill pill-done">✓ Done</span>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="stage-row running" id="stage-row-4">
+            <div class="stage-left">
+              <span>🖼</span>
+              <span>Step 4: Gemini Canvas Batch Generation (In-Memory JSZip)</span>
+            </div>
+            <span class="stage-pill pill-running" id="stage-4-status-pill">Running (25%)</span>
+          </div>
+
+          <!-- Step 4B -->
+          <div class="stage-row" id="stage-row-4b" style="padding-left:36px; border-left:3px solid var(--border-medium);">
+            <div class="stage-left">
+              <span>🎬</span>
+              <span>Step 4B: Veo 3 Video Clips (Google Flow)</span>
+            </div>
+            <span style="font-size:11px; color:var(--text-dim);" id="veo-clips-counter">0/8 clips</span>
+          </div>
+
+          <!-- Step 5 -->
+          <div class="stage-row" id="stage-row-5">
+            <div class="stage-left">
+              <span>✅</span>
+              <span>Step 5: Mandatory Image Verification (0 Blanks Guard)</span>
+            </div>
+            <span class="stage-pill pill-ready" id="stage-5-status-pill">Ready</span>
+          </div>
+
+          <!-- Step 6 -->
+          <div class="stage-row" id="stage-row-6">
+            <div class="stage-left">
+              <span>🎬</span>
+              <span>Step 6: 1080p Full HD Master Video Render</span>
+            </div>
+            <span class="stage-pill pill-ready" id="stage-6-status-pill">Ready</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           VIEW 3: QUEUE VIEW (Batch Jobs)
+           ===================================================================== -->
+      <section id="view-queue" class="view-panel">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <div>
+            <h2 style="font-size:16px; font-weight:800; color:#fff;">Batch Generation Queue</h2>
+            <p style="font-size:12px; color:var(--text-muted);">Manage multi-project batch queues, render priorities, and exports.</p>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button id="btn-queue-pause-all" class="btn-voice-tool">Pause All</button>
+            <button id="btn-queue-clear-finished" class="btn-voice-tool">Clear Finished</button>
+            <button id="btn-queue-add-new" class="btn-gold-sm">+ Add Project to Batch</button>
+          </div>
+        </div>
+
+        <div class="section-card" style="padding:0; overflow:hidden;">
+          <table class="queue-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Project Name</th>
+                <th>Voice / Style</th>
+                <th>Shots</th>
+                <th>Progress</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="queue-table-body">
+              <!-- Dynamically populated from /api/queue by app.js -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           VIEW 4: IMAGE WALL VIEW
+           ===================================================================== -->
+      <section id="view-image-wall" class="view-panel">
+        <!-- Re-render Banner -->
+        <div class="wall-alert-banner">
+          <span class="wall-alert-text">1 shot redrawn. Render the video again to put it in (only the changed shots are made again).</span>
+          <button id="btn-rerender-changed" class="btn-gold-sm" style="box-shadow:0 0 10px rgba(245,184,46,0.3);">⚡ Re-render this video</button>
+        </div>
+
+        <!-- Info Bar -->
+        <div class="wall-info-bar">
+          <div class="wall-info-left">
+            <span class="wall-stat">Project: <strong id="wall-project-name">project bhai 1</strong></span>
+            <span class="wall-stat">Total Shots: <strong id="wall-total-shots">55</strong></span>
+            <span class="wall-stat">Batches: <strong>2 batches</strong></span>
+            <span class="badge-clean-frames">🛡 0 Blank Frames (55 Verified Clean)</span>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:11.5px; color:var(--text-muted);">Browser:</span>
+            <select id="select-wall-browser" class="dock-select" style="padding:4px 8px;">
+              <option value="acc1">acc1</option>
+              <option value="acc2" selected>acc2</option>
+            </select>
+            <button id="btn-switch-profile-resume" class="btn-gold-sm" style="padding:4px 10px; font-size:11px;">Switch Profile & Resume</button>
+          </div>
+        </div>
+
+        <!-- Grid Header -->
+        <div class="wall-grid-header">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <strong style="color:#fff; font-size:13px;">🖼 Placed Film Shots</strong>
+            <span class="badge-unlimited" id="wall-shots-count-badge" style="font-size:10px;">55 SHOTS</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <button id="btn-add-shot" class="btn-gold-sm" style="display:flex; align-items:center; gap:5px; padding:4px 10px; font-size:11px;"><span>+</span> Add New Shot</button>
+            <button id="btn-batch-redraw" class="btn-header-sm" style="padding:4px 10px; font-size:11px;">🎨 Batch Redraw</button>
+            <span style="font-size:11px; color:var(--text-muted); margin-left:6px;">Unpacked & ready for render</span>
+          </div>
+        </div>
+
+        <!-- 55 Shots Grid -->
+        <div class="shots-grid-container" id="shots-grid-container">
+          <!-- Dynamically filled with 55 cards by app.js -->
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           VIEW 5: DELIVERABLES VIEW
+           ===================================================================== -->
+      <section id="view-deliverables" class="view-panel">
+        <!-- Top Bar -->
+        <div class="deliverables-header-bar">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="color:var(--gold-primary); font-weight:700;">🎬 Finished Video Output:</span>
+            <select id="select-finished-video" class="input-select" style="width:340px; padding:4px 8px;">
+              <!-- Dynamically populated from /api/projects by app.js -->
+            </select>
+          </div>
+          <span style="color:var(--text-dim); font-size:11px;">Saved in: <strong>your user folder &gt; StickFilm</strong> &bull; newest video on top</span>
+        </div>
+
+        <!-- Two Column Deliverables Layout -->
+        <div class="deliverables-grid">
+          <!-- Left Column: Video Player & Viral Thumbnails -->
+          <div class="player-card">
+            <div class="video-player-box">
+              <video id="master-video-player" src="" controls preload="metadata"></video>
+            </div>
+
+            <!-- Video File Meta & Actions -->
+            <div class="file-info-actions">
+              <div class="file-meta-col">
+                <span class="file-title" id="deliverable-file-title">project bhai 1.mp4</span>
+                <span class="file-sub">Published Master Video &bull; 28.2 MB &bull; 1080p Full HD</span>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <button id="btn-play-in-player" class="btn-voice-tool">▶ Play in Player</button>
+                <button id="btn-open-folder" class="btn-voice-tool">📁 Open Folder</button>
+                <a id="btn-download-mp4" href="#" download="video.mp4" class="btn-gold-sm" style="text-decoration:none; display:flex; align-items:center; gap:5px;">⬇ Download MP4</a>
+              </div>
+            </div>
+
+            <!-- Viral Thumbnails Row -->
+            <div style="margin-top:8px;">
+              <div class="form-label" style="margin-bottom:6px;">Viral Thumbnail Options (Click to view full image)</div>
+              <div class="thumbnails-row" id="thumbnails-row-container">
+                <!-- Dynamically populated by app.js renderDeliverableThumbnails() -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: YouTube Metadata ('upload.txt') -->
+          <div class="metadata-card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <strong style="color:#fff; font-size:12.5px;">📄 YouTube Upload Metadata ('upload.txt')</strong>
+              <button id="btn-copy-metadata" class="btn-voice-tool" style="color:var(--gold-primary); font-weight:700;">Copy All</button>
+            </div>
+            <textarea id="upload-txt-content" class="metadata-textarea" readonly></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           VIEW 6: PROFILES VIEW
+           ===================================================================== -->
+      <section id="view-profiles" class="view-panel">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <div>
+            <h2 style="font-size:16px; font-weight:800; color:#fff;">Browser Automation Profiles</h2>
+            <p style="font-size:12px; color:var(--text-muted);">Manage dedicated Google Chrome user data profiles for Gemini Canvas automation.</p>
+          </div>
+          <button id="btn-add-profile" class="btn-gold-sm">+ Add Chrome Profile</button>
+        </div>
+
+        <div class="profiles-grid" id="profiles-grid-container">
+          <!-- Dynamically populated from backend /api/profiles by app.js -->
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           VIEW 7: VEO PROFILES VIEW
+           ===================================================================== -->
+      <section id="view-veo-profiles" class="view-panel">
+        <div style="margin-bottom:16px;">
+          <h2 style="font-size:16px; font-weight:800; color:#fff;">Google Veo 3 Video Motion Settings</h2>
+          <p style="font-size:12px; color:var(--text-muted);">Configure cinematic AI video generation parameters for hero moments.</p>
+        </div>
+
+        <div class="production-grid">
+          <div class="section-card">
+            <label class="form-label">Veo Motion Model</label>
+            <select id="select-veo-model-spec" class="input-select">
+              <option value="veo_3_1_lite" selected>Google Veo 3.1 Lite (Fast Motion Generation)</option>
+              <option value="veo_3_ultra">Google Veo 3.0 Ultra (Cinematic 1080p 60fps)</option>
+              <option value="veo_flow">Google Flow Video Synthesizer</option>
+            </select>
+
+            <label class="form-label">Hero Moments Strategy</label>
+            <select id="select-hero-strategy" class="input-select">
+              <option value="auto_8" selected>Auto-detect top 8 hero action shots</option>
+              <option value="first_and_last">First shot & climax shots only</option>
+              <option value="all_shots">Generate full video in Veo (High credits)</option>
+            </select>
+
+            <label class="form-label">Motion Intensity (0.1 - 1.0)</label>
+            <input type="range" id="input-veo-motion-intensity" class="audio-seek-slider" min="1" max="10" value="8">
+
+            <label class="form-label">Negative Prompts (Video Guard)</label>
+            <textarea id="input-veo-negative-prompts" class="textarea-custom" style="min-height:70px;">blurry, distorted anatomy, morphing hands, shaky artifacts, flicker</textarea>
+            
+            <button id="btn-save-veo-settings" class="btn-gold-sm" style="align-self:flex-start;">Save Veo Profile</button>
+          </div>
+
+          <div class="section-card">
+            <div class="card-header-title">
+              <span>Veo 3 Architecture Flow</span>
+              <span style="color:#10b981;">Online</span>
+            </div>
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.6;">
+              When Veo 3.1 is enabled in the bottom dock, Step 4B automatically generates high-framerate dynamic video clips for the most explosive action shots identified in Stage 3, seamlessly blended into the 1080p FFmpeg timeline.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================================
+           VIEW 8: CONSOLE VIEW (Terminal Stream)
+           ===================================================================== -->
+      <section id="view-console" class="view-panel">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <strong style="color:#fff; font-size:14px;">STICKFILM TERMINAL CONSOLE</strong>
+            <span class="badge-active-style" style="color:#10b981; border-color:rgba(16,185,129,0.4); background:rgba(16,185,129,0.15);">● Live Stream Connected</span>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button id="btn-clear-console" class="btn-voice-tool">Clear Logs</button>
+            <button id="btn-toggle-autoscroll" class="btn-voice-tool">Auto-scroll: ON</button>
+          </div>
+        </div>
+
+        <div class="console-terminal" id="console-terminal-body">
+          <!-- Console logs populated dynamically by app.js logConsole() -->
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 1: NEW CATEGORY (Style Creator)
+       ========================================================================= -->
+  <div class="modal-overlay" id="modal-new-category">
+    <div class="modal-box modal-new-cat">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span style="font-size:18px;">🧩</span>
+          <div>
+            <div class="modal-title">New category</div>
+            <div style="font-size:11px; color:var(--text-muted);">Describe the look or upload a picture. StickFilm writes the style and draws samples - characters, crowd, places, objects - before you keep it.</div>
+          </div>
+        </div>
+        <button class="modal-close-btn" id="btn-close-new-cat">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div>
+          <label class="form-label" style="text-transform:uppercase; font-size:10.5px;">WHAT SHOULD YOUR FILMS LOOK LIKE?</label>
+          <textarea id="input-new-cat-prompt" class="textarea-custom" style="min-height:75px;" placeholder="e.g. Vox style ancient history documentary - archival photo cut-outs sliding on a paper board">Animated Cartoon Character Style - vibrant warm palette, soft cel shading, smooth gradient lighting, prehistoric jungle caveman hero</textarea>
+          <div style="font-size:10.5px; color:var(--text-dim); margin-top:4px;">Say "Vox style" for cut-out pictures on a paper board. Any language works.</div>
+        </div>
+
+        <div>
+          <div class="form-label" style="text-transform:uppercase; font-size:10.5px; margin-bottom:4px;">REFERENCE IMAGES (OPTIONAL, UP TO 4)</div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <button id="btn-upload-style-ref" class="btn-voice-tool">Upload reference images</button>
+            <input type="file" id="input-style-ref-file" accept="image/png, image/jpeg, image/webp" multiple style="display:none;">
+            <button id="btn-clear-style-ref" class="btn-header-sm">Clear</button>
+            <span style="font-size:11px; color:var(--text-muted);" id="style-ref-status-text">No reference images selected.</span>
+          </div>
+          <!-- Uploaded Ref Thumbs Container -->
+          <div style="margin-top:8px; display:flex; gap:6px;" id="style-ref-thumbs-preview">
+            <!-- Dynamically populated when reference images are attached -->
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          <button id="btn-create-style-samples" class="btn-gold-sm" style="padding:8px 18px;">Create samples</button>
+          <span id="create-samples-status" style="font-size:11.5px; color:var(--gold-primary);">Ready to generate samples.</span>
+        </div>
+
+        <!-- Style Formula Breakdown Box -->
+        <div class="style-formula-box" id="style-formula-breakdown">
+          <div style="font-weight:700; color:var(--gold-primary); margin-bottom:4px;">Animated Cartoon Character Style &bull; motion: slow zoom</div>
+          <div><strong>Style:</strong> digital 2D animation, clean inked line art, vibrant warm palette, soft cel shading, smooth gradient lighting, subtle paper texture, balanced character-focused composition</div>
+          <div style="margin-top:4px;"><strong>Samples:</strong> Wide establishing shot of a lush prehistoric jungle under a bright sunny sky &bull; Medium shot of the young caveman exploring a rocky terrain with curiosity &bull; Close detail of a primitive stone tool resting on a mossy log</div>
+        </div>
+
+        <!-- 8 Generated Image Samples Grid -->
+        <div class="samples-8-grid" id="samples-8-grid-container">
+          <!-- Dynamically populated after POST /api/style/generate-samples -->
+        </div>
+      </div>
+
+      <div class="modal-footer" style="justify-content:space-between;">
+        <input type="text" id="input-saved-category-name" class="input-text" style="width:280px;" value="Animated Cartoon Character Style">
+        <div style="display:flex; gap:8px;">
+          <button id="btn-try-another-prompt" class="btn-voice-tool">Try another prompt</button>
+          <button id="btn-save-category" class="btn-gold-sm">Save category</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 2: ALL AI33 VOICES
+       ========================================================================= -->
+  <div class="modal-overlay" id="modal-all-voices">
+    <div class="modal-box modal-voices">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span style="font-size:18px;">🎧</span>
+          <div>
+            <div class="modal-title">All AI33 voices</div>
+            <div style="font-size:11px; color:var(--text-muted);">Play a sample, star the ones you like, and press Use to pick one</div>
+          </div>
+        </div>
+        <button class="modal-close-btn" id="btn-close-all-voices">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Category Tabs -->
+        <div class="voice-catalog-tabs">
+          <button class="chip" data-vtab="favourites">⭐ Favourites</button>
+          <button class="chip" data-vtab="clones">👤 My clones</button>
+          <button class="chip active" data-vtab="elevenlabs">🔵 ElevenLabs</button>
+          <button class="chip" data-vtab="minimax">🎭 Minimax</button>
+          <button class="chip" data-vtab="free">🆓 Free</button>
+        </div>
+
+        <!-- Search & Filter Row -->
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="input-voice-search" class="input-text" placeholder="Search: hindi, deep, storyteller, female..." style="flex:1;">
+          <select id="select-voice-lang-filter" class="input-select" style="width:130px;">
+            <option value="all">Any language</option>
+            <option value="hindi">Hindi</option>
+            <option value="english">English</option>
+            <option value="spanish">Spanish</option>
+          </select>
+          <select id="select-voice-gender-filter" class="input-select" style="width:110px;">
+            <option value="all">Any voice</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+
+        <div style="font-size:11px; color:var(--text-dim);" id="catalog-count-label">Showing 51 of 19,335 voices</div>
+
+        <!-- Voice Items List -->
+        <div class="voice-catalog-list" id="voice-catalog-list-container">
+          <!-- Populated by app.js -->
+        </div>
+      </div>
+
+      <div class="modal-footer" style="justify-content:center;">
+        <button id="btn-load-more-voices" class="btn-voice-tool">Load more</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 3: CHECK YOUR CHROME LOGIN
+       ========================================================================= -->
+  <div class="modal-overlay" id="modal-chrome-login">
+    <div class="modal-box" style="width:440px;">
+      <div class="modal-header">
+        <strong class="modal-title">Check your Chrome login</strong>
+        <button class="modal-close-btn" id="btn-close-chrome-login">✕</button>
+      </div>
+      <div class="modal-body" style="font-size:12.5px; color:var(--text-muted); line-height:1.5;">
+        <p>Is the Chrome profile <strong style="color:#fff;" id="check-profile-name">"acc1"</strong> signed in to your Google account? Image generation uses that login. If you're not sure, click Cancel, use "🌐 Open & Login" to check, then launch again.</p>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-cancel-chrome-login" class="btn-header-sm" style="padding:6px 14px;">Cancel</button>
+        <button id="btn-confirm-chrome-login" class="btn-header-sm btn-danger-text" style="background:rgba(239,68,68,0.2); border-color:#ef4444; color:#fff; font-weight:700; padding:6px 16px;">Yes, It's logged in</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 4: API KEYS SETTINGS
+       ========================================================================= -->
+  <div class="modal-overlay" id="modal-api-keys">
+    <div class="modal-box" style="width:480px;">
+      <div class="modal-header">
+        <strong class="modal-title">🔑 API Keys Settings</strong>
+        <button class="modal-close-btn" id="btn-close-api-keys">✕</button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <label class="form-label">Google Gemini API Key</label>
+          <input type="password" id="key-gemini" class="input-text" placeholder="AIzaSy...">
+        </div>
+        <div>
+          <label class="form-label">ElevenLabs API Key</label>
+          <input type="password" id="key-elevenlabs" class="input-text" placeholder="sk_...">
+        </div>
+        <div>
+          <label class="form-label">OpenAI / OpenRouter API Key</label>
+          <input type="password" id="key-openai" class="input-text" placeholder="sk-ant-... or sk-or-...">
+        </div>
+        <div>
+          <label class="form-label">Minimax API Key / Group ID</label>
+          <input type="password" id="key-minimax" class="input-text" placeholder="minimax_...">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-cancel-api-keys" class="btn-header-sm">Cancel</button>
+        <button id="btn-save-api-keys" class="btn-gold-sm">Save Keys</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 5: GEMINI WRITER
+       ========================================================================= -->
+  <div class="modal-overlay" id="modal-gemini-writer">
+    <div class="modal-box" style="width:580px;">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span style="font-size:18px;">✨</span>
+          <strong class="modal-title">Gemini AI Script Writer</strong>
+        </div>
+        <button class="modal-close-btn" id="btn-close-gemini-writer">✕</button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <label class="form-label">Video Concept / Topic</label>
+          <input type="text" id="input-ai-script-topic" class="input-text" placeholder="e.g. The mysterious deep sea trench discovery, or origin of stars..." value="">
+        </div>
+        <div class="row-dual">
+          <div>
+            <label class="form-label">Language & Tone</label>
+            <select id="select-ai-script-tone" class="input-select">
+              <option value="english_doc" selected>English Epic Cinematic Breakdown</option>
+              <option value="hindi_doc">Hindi Cinematic Documentary (Engaging Hook)</option>
+              <option value="shorts_fast">60-sec Fast Viral Shorts Hook</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Target Duration</label>
+            <select id="select-ai-script-dur" class="input-select">
+              <option value="2min" selected>2 Minutes (~280 words, 55 shots)</option>
+              <option value="1min">1 Minute (~140 words, 28 shots)</option>
+              <option value="5min">5 Minutes (~700 words, 130 shots)</option>
+            </select>
+          </div>
+        </div>
+        <button id="btn-generate-ai-script" class="btn-gold-sm" style="align-self:flex-start;">✨ Generate Full Script</button>
+
+        <div>
+          <label class="form-label">Generated Narration Script</label>
+          <textarea id="ai-script-result" class="textarea-custom" style="min-height:160px; font-size:12.5px;" placeholder="AI generated narration script will appear here..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-cancel-gemini-writer" class="btn-header-sm">Cancel</button>
+        <button id="btn-apply-gemini-script" class="btn-gold-sm">Apply to Production</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 6: EDIT SHOT MODAL
+       ========================================================================= -->
+  <div class="modal-overlay" id="modal-edit-shot">
+    <div class="modal-box" style="width:500px;">
+      <div class="modal-header">
+        <strong class="modal-title" id="edit-shot-modal-title">✏️ Edit Shot #25</strong>
+        <button class="modal-close-btn" id="btn-close-edit-shot">✕</button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <label class="form-label">Shot Dialogue / Narration Subtitle</label>
+          <input type="text" id="edit-shot-text" class="input-text" value="">
+        </div>
+        <div>
+          <label class="form-label">Action-First Image Prompt</label>
+          <textarea id="edit-shot-prompt" class="textarea-custom" style="min-height:85px;"></textarea>
+        </div>
+        <div>
+          <label class="form-label">Duration (seconds)</label>
+          <input type="number" id="edit-shot-duration" class="input-text" step="0.1" min="0.5" max="30" value="2.5">
+        </div>
+        <div>
+          <label class="form-label">Upload Custom Image (PNG / JPG / WEBP - Replaces Frame)</label>
+          <input type="file" id="edit-shot-file" class="input-text" accept="image/png, image/jpeg, image/webp">
+          <div id="edit-shot-preview-box" style="margin-top:6px; display:none;">
+            <img id="edit-shot-preview-img" style="max-height:80px; border-radius:4px; border:1px solid var(--border-medium);" alt="Preview">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-cancel-edit-shot" class="btn-header-sm">Cancel</button>
+        <button id="btn-save-shot-changes" class="btn-gold-sm">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 7: ADD NEW SHOT MODAL
+       ========================================================================= -->
+  <div class="modal-overlay" id="modal-add-shot">
+    <div class="modal-box" style="width:520px;">
+      <div class="modal-header">
+        <strong class="modal-title">➕ Add New Film Shot</strong>
+        <button class="modal-close-btn" id="btn-close-add-shot">✕</button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <label class="form-label">Insert Position</label>
+          <select id="select-add-shot-pos" class="input-select">
+            <option value="end">At end of timeline</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label">Narration Subtitle Text (Hindi / English)</label>
+          <textarea id="input-add-shot-text" class="textarea-custom" style="min-height:60px;" placeholder="Narration dialogue spoken in this shot..."></textarea>
+        </div>
+        <div>
+          <label class="form-label">Cinematic Visual Prompt</label>
+          <textarea id="input-add-shot-prompt" class="textarea-custom" style="min-height:75px;" placeholder="Detailed visual prompt describing characters, staging, lighting..."></textarea>
+        </div>
+        <div>
+          <label class="form-label">Duration (seconds)</label>
+          <input type="number" id="input-add-shot-dur" class="input-text" value="2.5" step="0.1" min="0.5" max="30">
+        </div>
+        <div>
+          <label class="form-label">Upload Custom Image (Optional)</label>
+          <input type="file" id="file-add-shot-img" class="input-text" accept="image/png, image/jpeg, image/webp">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-cancel-add-shot" class="btn-header-sm">Cancel</button>
+        <button id="btn-confirm-add-shot" class="btn-gold-sm">Add Shot to Timeline</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 8: ADD / EDIT CHROME PROFILE MODAL
+       ========================================================================= -->
+  <div class="modal-overlay" id="modal-profile">
+    <div class="modal-box" style="width:500px;">
+      <div class="modal-header">
+        <strong class="modal-title" id="modal-profile-title">🌐 Add Chrome Automation Profile</strong>
+        <button class="modal-close-btn" id="btn-close-profile-modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="input-profile-edit-mode" value="create">
+        <div>
+          <label class="form-label">Profile Identifier (e.g. acc3, creator_pro)</label>
+          <input type="text" id="input-profile-id" class="input-text" placeholder="acc3">
+        </div>
+        <div>
+          <label class="form-label">Profile Display Name</label>
+          <input type="text" id="input-profile-name" class="input-text" placeholder="acc3 (High Quality)">
+        </div>
+        <div>
+          <label class="form-label">Google Account Email</label>
+          <input type="email" id="input-profile-email" class="input-text" placeholder="creator3@studio.ai">
+        </div>
+        <div>
+          <label class="form-label">Chrome User Data Directory (Optional)</label>
+          <input type="text" id="input-profile-datadir" class="input-text" placeholder="C:\Users\SSC\AppData\Local\Google\Chrome\User Data\Profile 3">
+        </div>
+        <div>
+          <label class="form-label">Profile Notes</label>
+          <input type="text" id="input-profile-notes" class="input-text" placeholder="Dedicated profile for Gemini Canvas automation">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-cancel-profile" class="btn-header-sm">Cancel</button>
+        <button id="btn-save-profile" class="btn-gold-sm">Save Profile</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 9: FULL RESOLUTION IMAGE LIGHTBOX
+       ========================================================================= -->
+  <div class="modal-overlay" id="modal-lightbox">
+    <div class="modal-box" style="max-width:90vw; max-height:90vh; background:transparent; border:none; box-shadow:none;">
+      <button class="modal-close-btn" id="btn-close-lightbox" style="position:absolute; top:-35px; right:0; font-size:24px; color:#fff;">✕</button>
+      <img id="lightbox-img" src="" style="max-width:88vw; max-height:85vh; object-fit:contain; border-radius:6px; border:2px solid var(--gold-primary); box-shadow:0 0 30px rgba(0,0,0,0.9);">
+    </div>
+  </div>
+
+  <!-- APPLICATION JAVASCRIPT -->
+  <script src="/static/app.js"></script>
+</body>
+</html>
